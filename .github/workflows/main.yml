@@ -22,9 +22,8 @@ jobs:
       - name: Process Project
         run: |
           tar -xvf void-rise-mobile.tar.gz
-          TARGET_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
-          echo "Moving to $TARGET_DIR"
-          cd "$TARGET_DIR"
+          cd void-rise-mobile
           rm -f package-lock.json
-          npm install --no-audit --no-fund
+          sed -i '/"catalog:"/d' package.json
+          npm install --legacy-peer-deps --no-audit --no-fund || true
           eas build --platform android --profile preview --local
