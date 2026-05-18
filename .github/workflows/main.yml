@@ -22,6 +22,9 @@ jobs:
       - name: Extract project
         run: tar -xzvf void-rise-mobile.tar.gz
 
+      - name: Check Folder Name
+        run: ls -la
+
       - name: Install dependencies
         run: npm install
 
