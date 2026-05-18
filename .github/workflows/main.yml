@@ -23,13 +23,9 @@ jobs:
         run: tar -xzvf void-rise-mobile.tar.gz
 
       - name: Install dependencies
-        run: |
-          cd void-rise-mobile || cd Void-Rise-Mobile || cd .
-          npm install
+        run: npm install
 
       - name: Build Android App
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: |
-          cd void-rise-mobile || cd Void-Rise-Mobile || cd .
-          eas build --platform android --profile preview --local
+        run: eas build --platform android --profile preview --local
