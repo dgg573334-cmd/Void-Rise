@@ -21,7 +21,7 @@ jobs:
           npm install -g pnpm
           npm install -g eas-cli
 
-      - name: Setup Java (required for Android build)
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -29,6 +29,10 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Extract Project Files
+        run: |
+          tar -xvf void-rise-mobile.tar.gz
 
       - name: Install dependencies
         run: |
