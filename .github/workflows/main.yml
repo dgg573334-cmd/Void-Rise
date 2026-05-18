@@ -36,18 +36,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd void-rise-mobile
-          pnpm install
+          cd void-rise/mobile
+          rm -rf .pnpm-store node_modules
+          pnpm install --no-frozen-lockfile
 
       - name: Build Android APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          cd void-rise-mobile
+          cd void-rise/mobile
           eas build --platform android --profile preview --local --output ./app-build.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: void-rise-app
-          path: void-rise-mobile/app-build.apk
+          path: void-rise/mobile/app-build.apk
