@@ -14,18 +14,36 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Setup EAS CLI
-        run: npm install -g eas-cli
+      - name: Setup PNPM and EAS CLI
+        run: |
+          npm install -g pnpm
+          npm install -g eas-cli
 
-      - name: Process Project and Build
+      - name: Setup Java (required for Android build)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: |
+          cd void-rise-mobile
+          pnpm install
+
+      - name: Build Android APK with EAS
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          tar -xvf void-rise-mobile.tar.gz
-          cd void-rise/mobile
-          rm -f package-lock.json
-          sed -i '/"catalog:"/d' package.json
-          npm install --legacy-peer-deps --no-audit --no-fund || true
-          eas build --platform android --profile preview --local
+          cd void-rise-mobile
+          eas build --platform android --profile preview --local --output ./app-build.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: void-rise-app
+          path: void-rise-mobile/app-build.apk
