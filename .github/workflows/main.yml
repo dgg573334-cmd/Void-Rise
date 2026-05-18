@@ -19,12 +19,12 @@ jobs:
       - name: Setup EAS CLI
         run: npm install -g eas-cli
 
-      - name: Extract project
-        run: tar -xzvf void-rise-mobile.tar.gz
+      - name: Extract Project Files
+        run: |
+          tar -xvf void-rise-mobile.tar.gz --strip-components=1 || tar -xvf void-rise-mobile.tar.gz || unzip void-rise-mobile.tar.gz || true
 
       - name: Install dependencies
         run: |
-          cd void-rise-mobile
           rm -f package-lock.json
           npm install --no-audit --no-fund
 
@@ -32,5 +32,4 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          cd void-rise-mobile
           eas build --platform android --profile preview --local
