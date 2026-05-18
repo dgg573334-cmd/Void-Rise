@@ -1,0 +1,35 @@
+name: Build APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Extract project
+        run: tar -xzvf void-rise-mobile.tar.gz
+
+      - name: Install dependencies
+        run: |
+          cd void-rise-mobile || cd Void-Rise-Mobile || cd .
+          npm install
+
+      - name: Build Android App
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          cd void-rise-mobile || cd Void-Rise-Mobile || cd .
+          eas build --platform android --profile preview --local
