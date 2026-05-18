@@ -19,10 +19,12 @@ jobs:
       - name: Setup EAS CLI
         run: npm install -g eas-cli
 
-      - name: Process Project
+      - name: Process Project and Build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           tar -xvf void-rise-mobile.tar.gz
-          cd void-rise-mobile
+          cd void-rise/mobile
           rm -f package-lock.json
           sed -i '/"catalog:"/d' package.json
           npm install --legacy-peer-deps --no-audit --no-fund || true
