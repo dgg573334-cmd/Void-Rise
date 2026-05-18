@@ -22,13 +22,17 @@ jobs:
       - name: Extract project
         run: tar -xzvf void-rise-mobile.tar.gz
 
-      - name: Check Folder Name
-        run: ls -la
-
-      - name: Install dependencies
-        run: npm install
+      - name: Find and Install Dependencies
+        run: |
+          TARGET_DIR=$(dirname $(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1))
+          echo "Found package.json in: $TARGET_DIR"
+          cd "$TARGET_DIR"
+          npm install
 
       - name: Build Android App
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas build --platform android --profile preview --local
+        run: |
+          TARGET_DIR=$(dirname $(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1))
+          cd "$TARGET_DIR"
+          eas build --platform android --profile preview --local
